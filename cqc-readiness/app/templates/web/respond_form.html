@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CQC Readiness Check — {{ recipient.full_name }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f4f6f9;
+      color: #333;
+      min-height: 100vh;
+    }
+    .header {
+      background: #1B4F8A;
+      padding: 20px 24px;
+      color: #fff;
+    }
+    .header-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .header-brand { font-size: 12px; color: #a8c4e8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+    .header-title { font-size: 20px; font-weight: 700; color: #fff; }
+    .header-sub { font-size: 13px; color: #cfe0f4; margin-top: 4px; }
+    .kq-badge {
+      display: inline-block; padding: 5px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; color: #fff;
+      text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0;
+    }
+    .container { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+
+    /* We Statement block */
+    .statement-block {
+      background: #EEF4FB;
+      border-left: 5px solid #1B4F8A;
+      border-radius: 0 8px 8px 0;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+    }
+    .statement-label { font-size: 11px; font-weight: 700; color: #1B4F8A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .statement-text { font-size: 16px; color: #1a1a1a; line-height: 1.6; font-style: italic; }
+
+    /* Evidence hint */
+    .evidence-block {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: #5d4037;
+      line-height: 1.6;
+    }
+    .evidence-block summary {
+      font-weight: 700;
+      color: #e65100;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .evidence-block summary::-webkit-details-marker { display: none; }
+    .evidence-block summary::before { content: "📎"; font-style: normal; }
+    .evidence-block[open] summary::after { content: " ▲"; font-size: 10px; }
+    .evidence-block:not([open]) summary::after { content: " ▼"; font-size: 10px; }
+    .evidence-body { margin-top: 10px; }
+
+    /* Progress bar */
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+    .progress-track { background: #e0e0e0; border-radius: 4px; height: 6px; }
+    .progress-fill { height: 6px; border-radius: 4px; background: #1B4F8A; transition: width 0.3s; }
+
+    /* Question card */
+    .question-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      overflow: visible;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .question-card.answered {
+      border-color: #c8e6c9;
+      opacity: 0.75;
+    }
+    .question-header {
+      background: #f8f9fc;
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .question-card.answered .question-header { background: #f1f8f2; }
+    .question-num { font-size: 12px; font-weight: 700; color: #888; white-space: nowrap; margin-top: 2px; }
+    .question-text { font-size: 14px; color: #1a1a1a; line-height: 1.5; flex: 1; }
+
+    /* Tooltip */
+    .help-wrap { position: relative; display: inline-flex; align-items: center; flex-shrink: 0; margin-top: 2px; }
+    .help-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #1B4F8A; color: #fff;
+      font-size: 11px; font-weight: 700; font-style: normal;
+      cursor: help; flex-shrink: 0; line-height: 1;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      right: 0;
+      bottom: calc(100% + 8px);
+      width: 270px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.55;
+      padding: 10px 14px;
+      border-radius: 6px;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      pointer-events: none;
+    }
+    .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%; right: 4px;
+      border: 6px solid transparent;
+      border-top-color: #1a1a1a;
+    }
+    .help-wrap:hover .tooltip,
+    .help-wrap:focus-within .tooltip { display: block; }
+
+    /* Answer buttons */
+    .question-body { padding: 14px 16px; }
+    .answer-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-answer {
+      display: inline-block; padding: 10px 14px;
+      border-radius: 5px; font-size: 13px; font-weight: 700;
+      color: #fff; text-decoration: none; line-height: 1;
+      border: none; cursor: pointer;
+    }
+    .btn-confident  { background: #2E7D32; }
+    .btn-confident:hover  { background: #256227; }
+    .btn-partly     { background: #F57C00; }
+    .btn-partly:hover     { background: #d96b00; }
+    .btn-not        { background: #C62828; }
+    .btn-not:hover        { background: #a81e1e; }
+
+    /* Answered state */
+    .answered-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 5px;
+      font-size: 13px; font-weight: 700; color: #fff;
+    }
+
+    @media (max-width: 480px) {
+      .answer-buttons { flex-direction: column; }
+      .btn-answer { text-align: center; }
+      .tooltip { right: auto; left: 0; }
+      .tooltip::after { left: 4px; right: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-brand">Bristol Care Homes</div>
+      <div class="header-title">CQC Readiness Check</div>
+      <div class="header-sub">Hello, <strong>{{ recipient.full_name }}</strong>{% if recipient.home_name %} &middot; {{ recipient.home_name }}{% endif %}</div>
+    </div>
+    {% set kq_colours = {'Safe':'#1565C0','Effective':'#2E7D32','Caring':'#c9960a','Responsive':'#E65100','Well-led':'#B71C1C'} %}
+    <span class="kq-badge" style="background:{{ kq_colours.get(statement.key_question, '#555') }};">{{ statement.key_question }}</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- We Statement -->
+  <div class="statement-block">
+    <div class="statement-label">Today's We Statement</div>
+    <div class="statement-text">"{{ statement.statement_text }}"</div>
+  </div>
+
+  <!-- Evidence hint (collapsible) -->
+  {% if evidence_hint %}
+  <details class="evidence-block">
+    <summary>Evidence &amp; documentation guide for this area</summary>
+    <div class="evidence-body">{{ evidence_hint }}</div>
+  </details>
+  {% endif %}
+
+  <!-- Progress -->
+  {% set done = answered | length %}
+  <div class="progress-wrap">
+    <div class="progress-label">{{ done }} of 3 questions answered</div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width: {{ (done / 3 * 100) | int }}%;"></div>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  {% for q in questions %}
+  {% set is_answered = q.num in answered %}
+  <div class="question-card{% if is_answered %} answered{% endif %}">
+    <div class="question-header">
+      <span class="question-num">Q{{ q.num }}/3</span>
+      <span class="question-text">{{ q.text }}</span>
+      {% if not is_answered %}
+      <span class="help-wrap" tabindex="0">
+        <span class="help-icon">?</span>
+        <span class="tooltip">{{ q.hint }}</span>
+      </span>
+      {% endif %}
+    </div>
+    <div class="question-body">
+      {% if is_answered %}
+        {% set ans = answered[q.num] %}
+        {% set colour = answer_colours.get(ans, '#666') %}
+        <span class="answered-badge" style="background:{{ colour }};">
+          &#10003; {{ answer_labels.get(ans, ans) }}
+        </span>
+      {% else %}
+      <div class="answer-buttons">
+        <a href="/respond/{{ token }}/q/{{ q.num }}/confident" class="btn-answer btn-confident">&#10003; Confident</a>
+        <a href="/respond/{{ token }}/q/{{ q.num }}/partly"    class="btn-answer btn-partly">&#9888; Partly Confident</a>
+        <a href="/respond/{{ token }}/q/{{ q.num }}/not_confident" class="btn-answer btn-not">&#10005; Not Confident</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+</div>
+</body>
+</html>

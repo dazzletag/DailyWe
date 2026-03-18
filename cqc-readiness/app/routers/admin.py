@@ -499,6 +499,21 @@ async def toggle_recipient(
     return RedirectResponse("/admin/recipients", status_code=303)
 
 
+@router.post("/clear-test-data")
+async def clear_test_data(
+    db: AsyncSession = Depends(get_db),
+    _admin: str = Depends(get_current_admin),
+):
+    """Delete all responses, assignments, and alerts (for testing resets)."""
+    from sqlalchemy import delete
+    await db.execute(delete(ResponseModel))
+    await db.execute(delete(CQMAlert))
+    await db.execute(delete(DailyAssignment))
+    await db.commit()
+    logger.info("Test data cleared by %s", _admin)
+    return RedirectResponse("/admin/dashboard?msg=cleared", status_code=303)
+
+
 @router.post("/recipients/{recipient_id}/delete")
 async def delete_recipient(
     recipient_id: int,

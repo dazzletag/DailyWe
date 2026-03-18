@@ -80,7 +80,8 @@
         <tr>
           <td style="padding:0 32px 12px 32px;">
             <p style="margin:0;font-size:13px;color:#666666;line-height:1.6;">
-              For each question below, click the button that best reflects your current confidence level:
+              For each question below, click the button that best reflects your current confidence level.
+              You can also open the full guidance page for evidence tips and help.
             </p>
           </td>
         </tr>
@@ -96,7 +97,6 @@
         {% set q_num = loop.index %}
         <tr>
           <td style="padding:0 32px 20px 32px;">
-            <!-- Question card -->
             <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
                    style="border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;">
               <tr>
@@ -113,21 +113,18 @@
                 <td style="padding:14px 16px;">
                   <table role="presentation" cellpadding="0" cellspacing="0">
                     <tr>
-                      <!-- Confident -->
                       <td style="padding-right:8px;">
                         <a href="{{ base_url }}/respond/{{ token }}/q/{{ q_num }}/confident"
                            style="display:inline-block;background-color:#2E7D32;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:10px 16px;border-radius:5px;line-height:1;">
                           ✅ Confident
                         </a>
                       </td>
-                      <!-- Partly Confident -->
                       <td style="padding-right:8px;">
                         <a href="{{ base_url }}/respond/{{ token }}/q/{{ q_num }}/partly"
                            style="display:inline-block;background-color:#F57C00;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:10px 16px;border-radius:5px;line-height:1;">
                           ⚠️ Partly Confident
                         </a>
                       </td>
-                      <!-- Not Confident -->
                       <td>
                         <a href="{{ base_url }}/respond/{{ token }}/q/{{ q_num }}/not_confident"
                            style="display:inline-block;background-color:#C62828;color:#ffffff;text-decoration:none;font-size:13px;font-weight:700;padding:10px 16px;border-radius:5px;line-height:1;">

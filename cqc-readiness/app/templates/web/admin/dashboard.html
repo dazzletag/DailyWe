@@ -103,10 +103,16 @@
 
   <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px;">
     <h1>Dashboard</h1>
-    <form method="post" action="/admin/send-now"
-          onsubmit="return confirm('Send daily check emails to all active recipients now?')">
-      <button type="submit" class="btn-send">&#9993; Send Emails Now</button>
-    </form>
+    <div style="display:flex;gap:10px;">
+      <form method="post" action="/admin/send-now"
+            onsubmit="return confirm('Send daily check emails to all active recipients now?')">
+        <button type="submit" class="btn-send">&#9993; Send Emails Now</button>
+      </form>
+      <form method="post" action="/admin/clear-test-data"
+            onsubmit="return confirm('This will permanently delete ALL responses, assignments, and alerts. Are you sure?')">
+        <button type="submit" class="btn-send" style="background:#B71C1C;">&#128465; Clear Test Data</button>
+      </form>
+    </div>
   </div>
   <p class="subtitle">
     Week starting {{ week_start.strftime('%d %B %Y') }} &nbsp;&middot;&nbsp;
@@ -115,6 +121,8 @@
 
   {% if msg == 'sent' %}
   <div class="flash flash-sent">&#10003; Emails sent successfully. Check Recent Completions below (recipients who already responded today won't be re-sent).</div>
+  {% elif msg == 'cleared' %}
+  <div class="flash flash-sent">&#10003; All test data cleared.</div>
   {% elif msg == 'error' %}
   <div class="flash flash-error">&#10005; Something went wrong sending emails — check the application logs for details.</div>
   {% endif %}

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import logging
+import random
 import uuid
 from datetime import datetime, date
 
 import pytz
-from sqlalchemy import select, func
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
@@ -49,49 +50,13 @@ async def _get_eligible_statements(
     return list(result.scalars().all())
 
 
-async def _get_last_statement_id(
-    db: AsyncSession, recipient_id: int
-) -> int | None:
-    """Return the statement_id used in the most recent assignment for this recipient."""
-    result = await db.execute(
-        select(DailyAssignment.statement_id)
-        .where(DailyAssignment.recipient_id == recipient_id)
-        .order_by(DailyAssignment.assignment_date.desc(), DailyAssignment.id.desc())
-        .limit(1)
-    )
-    row = result.scalar_one_or_none()
-    return row
-
-
-async def _pick_next_statement(
-    db: AsyncSession,
-    recipient_id: int,
+def _pick_next_statement(
     eligible_statements: list[WeStatement],
 ) -> WeStatement:
-    """
-    Pick the next statement in rotation for this recipient.
-
-    Cycles through all eligible statements before repeating.  If the recipient
-    has no prior assignments the first statement in the list is used.
-    """
+    """Pick a random statement from the eligible list."""
     if not eligible_statements:
-        raise ValueError(f"No eligible statements found for recipient {recipient_id}")
-
-    last_id = await _get_last_statement_id(db, recipient_id)
-
-    if last_id is None:
-        return eligible_statements[0]
-
-    # Find position of the last used statement in the eligible list
-    ids = [s.id for s in eligible_statements]
-    try:
-        last_idx = ids.index(last_id)
-    except ValueError:
-        # The previous statement was retired or moved out of role group
-        return eligible_statements[0]
-
-    next_idx = (last_idx + 1) % len(eligible_statements)
-    return eligible_statements[next_idx]
+        raise ValueError("No eligible statements found")
+    return random.choice(eligible_statements)
 
 
 async def create_daily_assignments(
@@ -158,7 +123,7 @@ async def create_daily_assignments(
             )
             continue
 
-        statement = await _pick_next_statement(db, recipient.id, eligible)
+        statement = _pick_next_statement(eligible)
 
         assignment = DailyAssignment(
             recipient_id=recipient.id,

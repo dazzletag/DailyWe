@@ -1,0 +1,6 @@
+name: cqc-readiness
+services:
+  app:
+    project: .
+    language: py
+    host: appservice

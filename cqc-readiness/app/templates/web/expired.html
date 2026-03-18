@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Link Expired{% endblock %}
+
+{% block extra_styles %}
+.expired-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #FFF3E0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  font-size: 28px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+
+  <div class="expired-icon">&#128336;</div>
+
+  <h1 style="color: #E65100;">Link Expired</h1>
+
+  <p style="margin-top: 10px; font-size: 15px; color: #555;">
+    This link has expired.
+  </p>
+
+  <p style="margin-top: 8px; font-size: 14px; color: #777; max-width: 420px; margin-left: auto; margin-right: auto;">
+    Daily CQC readiness check links are valid on the day they are sent only.
+    A new link will be sent at the start of the next working day.
+  </p>
+
+  <div style="background: #FFF3E0; border: 1px solid #ffcc80; border-radius: 6px; padding: 14px 18px; margin-top: 24px; display: inline-block; max-width: 380px;">
+    <p style="font-size: 13px; color: #BF360C; margin: 0;">
+      If you believe this is an error, or you received this link today and it
+      shouldn't have expired, please contact your
+      <strong>Care Quality Manager</strong>.
+    </p>
+  </div>
+
+</div>
+{% endblock %}

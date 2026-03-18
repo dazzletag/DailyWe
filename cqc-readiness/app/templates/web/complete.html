@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Check Complete{% endblock %}
+
+{% block extra_styles %}
+.complete-header {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 20px;
+}
+.complete-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+.outcome-banner {
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.outcome-banner.all-confident {
+  background-color: #E8F5E9;
+  border: 1px solid #a5d6a7;
+}
+.outcome-banner.support-sent {
+  background-color: #FFF3E0;
+  border: 1px solid #ffcc80;
+}
+.outcome-banner p { margin: 0; font-size: 15px; }
+.outcome-banner .outcome-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.statement-box {
+  background: #EEF4FB;
+  border-left: 5px solid #1B4F8A;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.statement-box p { font-size: 14px; color: #1a1a1a; font-style: italic; margin: 0; }
+.response-table { width: 100%; border-collapse: collapse; }
+.response-table th {
+  text-align: left;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #888;
+  padding: 8px 12px;
+  border-bottom: 2px solid #e0e0e0;
+}
+.response-table td {
+  padding: 10px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+}
+.response-table tr:last-child td { border-bottom: none; }
+.answer-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+
+  <div class="complete-header">
+    {% if all_confident %}
+      <span class="complete-icon">&#127881;</span>
+      <h1 style="color: #2E7D32;">All Questions Complete</h1>
+      <p class="text-muted" style="margin-top: 6px;">
+        Thank you, <strong>{{ recipient_name }}</strong>.
+      </p>
+    {% else %}
+      <span class="complete-icon">&#128203;</span>
+      <h1 style="color: #E65100;">All Questions Complete</h1>
+      <p class="text-muted" style="margin-top: 6px;">
+        Thank you, <strong>{{ recipient_name }}</strong>.
+      </p>
+    {% endif %}
+  </div>
+
+  {% if all_confident %}
+  <div class="outcome-banner all-confident">
+    <p class="outcome-title" style="color: #2E7D32;">&#10003; Great — all responses indicate full confidence!</p>
+    <p style="color: #388E3C;">
+      Your responses have been recorded. Keep up the excellent work at
+      <strong>{{ home_name }}</strong>.
+    </p>
+  </div>
+  {% else %}
+  <div class="outcome-banner support-sent">
+    <p class="outcome-title" style="color: #E65100;">&#128587; Support is on its way</p>
+    <p style="color: #BF360C;">
+      Your responses have been recorded. A support pack with guidance and evidence
+      checklists has been sent to your email. Your Care Quality Manager has also been
+      notified and will be in touch if needed.
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- We Statement -->
+  <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 1px; margin-bottom: 6px;">
+    Today's We Statement
+  </p>
+  <div class="statement-box">
+    <p>"{{ statement.statement_text }}"</p>
+  </div>
+
+  <!-- Answer Summary -->
+  <p style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: #888; letter-spacing: 1px; margin-bottom: 10px;">
+    Your Responses
+  </p>
+  <table class="response-table">
+    <thead>
+      <tr>
+        <th style="width: 40px;">#</th>
+        <th>Question</th>
+        <th style="width: 130px;">Your Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in answer_summary %}
+      <tr>
+        <td style="color: #888;">{{ item.question_num }}</td>
+        <td>{{ item.question_text }}</td>
+        <td>
+          <span class="answer-pill" style="background-color: {{ item.colour }};">
+            {{ item.answer_label }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}

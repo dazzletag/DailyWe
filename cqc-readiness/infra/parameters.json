@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "baseName": {
+      "value": "cqcreadiness"
+    },
+    "location": {
+      "value": "uksouth"
+    },
+    "dbAdminUser": {
+      "value": "cqcadmin"
+    },
+    "dbAdminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RG_NAME>/providers/Microsoft.KeyVault/vaults/<BOOTSTRAP_KV_NAME>"
+        },
+        "secretName": "db-admin-password"
+      }
+    },
+    "graphTenantId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RG_NAME>/providers/Microsoft.KeyVault/vaults/<BOOTSTRAP_KV_NAME>"
+        },
+        "secretName": "graph-tenant-id"
+      }
+    },
+    "graphClientId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RG_NAME>/providers/Microsoft.KeyVault/vaults/<BOOTSTRAP_KV_NAME>"
+        },
+        "secretName": "graph-client-id"
+      }
+    },
+    "graphClientSecret": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RG_NAME>/providers/Microsoft.KeyVault/vaults/<BOOTSTRAP_KV_NAME>"
+        },
+        "secretName": "graph-client-secret"
+      }
+    },
+    "graphSenderEmail": {
+      "value": "noreply@bristolcarehomes.co.uk"
+    },
+    "cqmAlertEmail": {
+      "value": "cqm@bristolcarehomes.co.uk"
+    },
+    "adminUsername": {
+      "value": "admin"
+    },
+    "adminPasswordHash": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RG_NAME>/providers/Microsoft.KeyVault/vaults/<BOOTSTRAP_KV_NAME>"
+        },
+        "secretName": "admin-password-hash"
+      }
+    }
+  }
+}

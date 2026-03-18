@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CQM Alerts — CQC Readiness Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    a { color: #1B4F8A; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .topbar {
+      background-color: #1B4F8A;
+      color: #fff;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .topbar .brand { font-size: 16px; font-weight: 700; color: #fff; }
+    .topbar .nav-links { display: flex; gap: 24px; }
+    .topbar .nav-links a { color: #a8c4e8; font-size: 14px; }
+    .topbar .nav-links a.active { color: #fff; font-weight: 600; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1B4F8A; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+    /* Filter form */
+    .filter-bar {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .filter-bar label { display: block; font-size: 12px; color: #666; margin-bottom: 4px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .filter-bar select, .filter-bar input {
+      padding: 7px 10px;
+      border: 1px solid #d0d0d0;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #333;
+      background: #fafafa;
+      min-width: 140px;
+    }
+    .btn { display: inline-block; padding: 8px 16px; border-radius: 5px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-primary { background-color: #1B4F8A; color: #fff; }
+    .btn-outline { background: #fff; color: #1B4F8A; border: 1px solid #1B4F8A; }
+    .btn-danger  { background-color: #C62828; color: #fff; }
+    .btn-success { background-color: #2E7D32; color: #fff; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    /* Export link */
+    .export-link { font-size: 13px; color: #1B4F8A; display: flex; align-items: center; gap: 4px; }
+    /* Table */
+    .section { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); overflow: hidden; }
+    .section-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+    .section-header h2 { font-size: 16px; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.7px; color: #888; padding: 10px 14px; text-align: left; background: #fafafa; border-bottom: 1px solid #e8e8e8; }
+    td { padding: 11px 14px; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: #fafcff; }
+    /* Badges */
+    .kq-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; }
+    .kq-safe       { background-color: #1565C0; }
+    .kq-effective  { background-color: #2E7D32; }
+    .kq-caring     { background-color: #F9A825; color: #333; }
+    .kq-responsive { background-color: #E65100; }
+    .kq-well-led   { background-color: #B71C1C; }
+    .status-open     { display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#FFEBEE;color:#B71C1C; }
+    .status-resolved { display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#E8F5E9;color:#2E7D32; }
+    .text-muted { color: #888; }
+    .empty-state { padding: 40px; text-align: center; color: #888; font-size: 14px; }
+    @media(max-width:700px) { .filter-bar { flex-direction: column; } }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="brand">CQC Readiness — Admin</span>
+  <div class="nav-links">
+    <a href="/admin/dashboard">Dashboard</a>
+    <a href="/admin/alerts" class="active">Alerts</a>
+    <a href="/admin/recipients">Recipients</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>&#128680; CQM Alerts</h1>
+  <p class="subtitle">
+    Low-confidence responses that require follow-up &nbsp;&middot;&nbsp;
+    Logged in as <strong>{{ admin_username }}</strong>
+  </p>
+
+  <!-- ── FILTER BAR ─────────────────────────────────────────────────────────── -->
+  <form method="get" action="/admin/alerts">
+    <div class="filter-bar">
+
+      <div>
+        <label for="f-home">Home</label>
+        <select name="home_name" id="f-home">
+          <option value="">All homes</option>
+          {% for h in available_homes %}
+          <option value="{{ h }}" {{ 'selected' if filter_home == h else '' }}>{{ h }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="f-kq">Key Question</label>
+        <select name="key_question" id="f-kq">
+          <option value="">All</option>
+          {% for kq in key_questions %}
+          <option value="{{ kq }}" {{ 'selected' if filter_key_question == kq else '' }}>{{ kq }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label for="f-resolved">Status</label>
+        <select name="resolved" id="f-resolved">
+          <option value="false" {{ 'selected' if filter_resolved in (None, 'false') else '' }}>Open only</option>
+          <option value="true" {{ 'selected' if filter_resolved == 'true' else '' }}>Resolved only</option>
+          <option value="" {{ 'selected' if filter_resolved == '' else '' }}>All</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Filter</button>
+      <a href="/admin/alerts" class="btn btn-outline">Reset</a>
+
+      <!-- Export -->
+      <a class="export-link"
+         href="/admin/alerts/export?{% if filter_home %}home_name={{ filter_home }}&{% endif %}{% if filter_key_question %}key_question={{ filter_key_question }}&{% endif %}{% if filter_resolved %}resolved={{ filter_resolved }}{% endif %}">
+        &#8595; Export CSV
+      </a>
+
+    </div>
+  </form>
+
+  <!-- ── ALERTS TABLE ───────────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <h2>
+        {% if filter_resolved == 'true' %}Resolved Alerts{% else %}Open Alerts{% endif %}
+        <span style="font-size:13px;font-weight:400;color:#888;">({{ alerts | length }} shown)</span>
+      </h2>
+    </div>
+
+    {% if alerts %}
+    <div style="overflow-x: auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Home</th>
+            <th>Name</th>
+            <th>Key Question</th>
+            <th>We Statement</th>
+            <th>Trigger</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for alert in alerts %}
+          <tr id="alert-{{ alert.id }}">
+            <td style="white-space:nowrap;color:#888;font-size:12px;">
+              {{ alert.created_at.strftime('%d %b %Y') if alert.created_at else '' }}<br>
+              <span>{{ alert.created_at.strftime('%H:%M') if alert.created_at else '' }}</span>
+            </td>
+            <td>{{ alert.home_name or '—' }}</td>
+            <td>
+              {{ alert.recipient_name }}<br>
+              <a href="mailto:{{ alert.recipient_email }}" style="font-size:12px;color:#888;">{{ alert.recipient_email }}</a>
+            </td>
+            <td>
+              <span class="kq-badge kq-{{ alert.key_question | lower | replace(' ', '-') }}">{{ alert.key_question }}</span>
+            </td>
+            <td style="max-width:240px;color:#555;">
+              {{ alert.statement_text[:80] }}{% if alert.statement_text | length > 80 %}…{% endif %}
+            </td>
+            <td style="font-size:12px;color:#B71C1C;">{{ alert.trigger_summary or '—' }}</td>
+            <td>
+              {% if alert.is_resolved %}
+                <span class="status-resolved">Resolved</span>
+                {% if alert.resolved_at %}
+                <div style="font-size:11px;color:#888;margin-top:3px;">
+                  {{ alert.resolved_at.strftime('%d %b %H:%M') }}<br>by {{ alert.resolved_by or '—' }}
+                </div>
+                {% endif %}
+              {% else %}
+                <span class="status-open">Open</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if not alert.is_resolved %}
+              <form method="post" action="/admin/alerts/{{ alert.id }}/resolve"
+                    onsubmit="return confirm('Mark this alert as resolved?');"
+                    style="display:inline;">
+                <button type="submit" class="btn btn-success btn-sm">Resolve</button>
+              </form>
+              {% else %}
+              <span class="text-muted" style="font-size:12px;">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      {% if filter_resolved == 'true' %}
+        No resolved alerts match your filters.
+      {% else %}
+        &#10003; No open alerts — all clear!
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+</body>
+</html>

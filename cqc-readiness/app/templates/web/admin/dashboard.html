@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — CQC Readiness</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #333;
+    }
+    a { color: #1B4F8A; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .topbar {
+      background-color: #1B4F8A;
+      color: #fff;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .topbar .brand { font-size: 16px; font-weight: 700; color: #fff; }
+    .topbar .nav-links { display: flex; gap: 24px; }
+    .topbar .nav-links a { color: #a8c4e8; font-size: 14px; }
+    .topbar .nav-links a.active { color: #fff; font-weight: 600; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1B4F8A; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+    /* Stats cards */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-top: 4px solid #1B4F8A; }
+    .stat-card .stat-value { font-size: 32px; font-weight: 700; color: #1B4F8A; line-height: 1; }
+    .stat-card .stat-label { font-size: 13px; color: #888; margin-top: 6px; }
+    .stat-card.green { border-top-color: #2E7D32; }
+    .stat-card.green .stat-value { color: #2E7D32; }
+    .stat-card.red { border-top-color: #B71C1C; }
+    .stat-card.red .stat-value { color: #B71C1C; }
+    .stat-card.orange { border-top-color: #E65100; }
+    .stat-card.orange .stat-value { color: #E65100; }
+    /* Section */
+    .section { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 24px; overflow: hidden; }
+    .section-header { padding: 16px 20px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+    .section-header h2 { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+    .section-body { padding: 0; }
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.7px; color: #888; padding: 10px 16px; text-align: left; background: #fafafa; border-bottom: 1px solid #e8e8e8; }
+    td { padding: 11px 16px; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background-color: #fafcff; }
+    /* Badges */
+    .kq-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; }
+    .kq-safe       { background-color: #1565C0; }
+    .kq-effective  { background-color: #2E7D32; }
+    .kq-caring     { background-color: #F9A825; color: #333; }
+    .kq-responsive { background-color: #E65100; }
+    .kq-well-led   { background-color: #B71C1C; }
+    /* Progress bar */
+    .progress-bar-wrap { background: #e0e0e0; border-radius: 4px; height: 8px; }
+    .progress-bar { height: 8px; border-radius: 4px; background-color: #1B4F8A; }
+    /* Alert count */
+    .alert-count { font-size: 22px; font-weight: 700; }
+    .alerts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding: 16px; }
+    .alert-home-card { background: #fff5f5; border: 1px solid #ffcdd2; border-radius: 6px; padding: 14px 16px; }
+    .alert-home-card .home-name { font-size: 14px; font-weight: 600; color: #B71C1C; }
+    .alert-home-card .home-count { font-size: 24px; font-weight: 700; color: #B71C1C; }
+    .alert-home-card .home-label { font-size: 12px; color: #888; }
+    .view-all-link { font-size: 13px; }
+    .send-btn-wrap { display: flex; align-items: center; gap: 12px; }
+    .btn-send {
+      display: inline-block; padding: 8px 18px; border-radius: 5px;
+      background: #2E7D32; color: #fff; font-size: 13px; font-weight: 700;
+      border: none; cursor: pointer; text-decoration: none;
+    }
+    .btn-send:hover { background: #256227; }
+    .flash {
+      padding: 10px 16px; border-radius: 6px; font-size: 13px;
+      font-weight: 600; margin-bottom: 16px;
+    }
+    .flash-sent  { background: #e8f5e9; color: #2E7D32; border: 1px solid #c8e6c9; }
+    .flash-error { background: #ffebee; color: #B71C1C; border: 1px solid #ffcdd2; }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .alerts-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="topbar">
+  <span class="brand">CQC Readiness — Admin</span>
+  <div class="nav-links">
+    <a href="/admin/dashboard" class="active">Dashboard</a>
+    <a href="/admin/alerts">Alerts</a>
+    <a href="/admin/recipients">Recipients</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:4px;">
+    <h1>Dashboard</h1>
+    <form method="post" action="/admin/send-now"
+          onsubmit="return confirm('Send daily check emails to all active recipients now?')">
+      <button type="submit" class="btn-send">&#9993; Send Emails Now</button>
+    </form>
+  </div>
+  <p class="subtitle">
+    Week starting {{ week_start.strftime('%d %B %Y') }} &nbsp;&middot;&nbsp;
+    Logged in as <strong>{{ admin_username }}</strong>
+  </p>
+
+  {% if msg == 'sent' %}
+  <div class="flash flash-sent">&#10003; Emails sent successfully. Check Recent Completions below (recipients who already responded today won't be re-sent).</div>
+  {% elif msg == 'error' %}
+  <div class="flash flash-error">&#10005; Something went wrong sending emails — check the application logs for details.</div>
+  {% endif %}
+
+  <!-- ── STATS CARDS ────────────────────────────────────────────────────────── -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">{{ total_this_week }}</div>
+      <div class="stat-label">Assignments this week</div>
+    </div>
+    <div class="stat-card {{ 'green' if completion_rate >= 80 else ('orange' if completion_rate >= 50 else 'red') }}">
+      <div class="stat-value">{{ completion_rate }}%</div>
+      <div class="stat-label">Completion rate this week</div>
+    </div>
+    <div class="stat-card {{ 'red' if total_open_alerts > 0 else 'green' }}">
+      <div class="stat-value">{{ total_open_alerts }}</div>
+      <div class="stat-label">Open alerts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">{{ completed_this_week }}</div>
+      <div class="stat-label">Completions this week</div>
+    </div>
+  </div>
+
+  <!-- ── OPEN ALERTS BY HOME ────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <h2>&#128680; Open Alerts by Home</h2>
+      <a href="/admin/alerts" class="view-all-link">View all &rarr;</a>
+    </div>
+    {% if open_alerts_by_home %}
+    <div class="alerts-grid">
+      {% for row in open_alerts_by_home %}
+      <div class="alert-home-card">
+        <div class="home-name">{{ row.home_name }}</div>
+        <div class="home-count">{{ row.count }}</div>
+        <div class="home-label">unresolved alert{{ 's' if row.count != 1 else '' }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div style="padding: 24px; text-align: center; color: #2E7D32; font-size: 14px;">
+      &#10003; No open alerts — all clear!
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- ── KEY QUESTION CONFIDENCE (LAST 30 DAYS) ─────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <h2>&#128200; Confidence by Key Question <small style="font-weight:400;color:#888;font-size:12px;">(last 30 days)</small></h2>
+    </div>
+    <div class="section-body">
+      {% if key_question_stats %}
+      <table>
+        <thead>
+          <tr>
+            <th>Key Question</th>
+            <th>Confident</th>
+            <th>Partly</th>
+            <th>Not Confident</th>
+            <th>Responses</th>
+            <th style="width:160px;">Confidence</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for kq, stats in key_question_stats.items() %}
+          <tr>
+            <td>
+              <span class="kq-badge kq-{{ kq | lower | replace('-', '-') | replace(' ', '-') | replace('well-led', 'well-led') }}">
+                {{ kq }}
+              </span>
+            </td>
+            <td style="color: #2E7D32; font-weight: 600;">{{ stats.confident }} <small style="color:#888;">({{ stats.confident_pct }}%)</small></td>
+            <td style="color: #F57C00; font-weight: 600;">{{ stats.partly }} <small style="color:#888;">({{ stats.partly_pct }}%)</small></td>
+            <td style="color: #C62828; font-weight: 600;">{{ stats.not_confident }} <small style="color:#888;">({{ stats.not_confident_pct }}%)</small></td>
+            <td style="color: #888;">{{ stats.total }}</td>
+            <td>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar" style="width: {{ stats.confident_pct }}%;
+                  background-color: {% if stats.confident_pct >= 80 %}#2E7D32{% elif stats.confident_pct >= 50 %}#F57C00{% else %}#C62828{% endif %};"></div>
+              </div>
+              <small style="color:#888;">{{ stats.confident_pct }}% confident</small>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding: 20px; color: #888; font-size: 14px;">No response data yet for the last 30 days.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── TOP WEAK STATEMENTS ────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <h2>&#128683; Top 5 Weak Areas <small style="font-weight:400;color:#888;font-size:12px;">(most low-confidence, last 30 days)</small></h2>
+    </div>
+    <div class="section-body">
+      {% if weak_statements %}
+      <table>
+        <thead>
+          <tr>
+            <th>We Statement</th>
+            <th>Key Question</th>
+            <th>Low-Confidence Answers</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ws in weak_statements %}
+          <tr>
+            <td style="max-width: 400px;">{{ ws.statement_text }}</td>
+            <td>
+              <span class="kq-badge kq-{{ ws.key_question | lower | replace(' ', '-') }}">{{ ws.key_question }}</span>
+            </td>
+            <td style="color: #C62828; font-weight: 600;">{{ ws.low_count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding: 20px; color: #888; font-size: 14px;">No low-confidence responses in the last 30 days.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ── RECENT COMPLETIONS ─────────────────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <h2>&#9989; Recent Completions</h2>
+    </div>
+    <div class="section-body">
+      {% if recent_completions %}
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Home</th>
+            <th>Key Question</th>
+            <th>Statement</th>
+            <th>Completed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rc in recent_completions %}
+          <tr>
+            <td style="white-space:nowrap;color:#888;">{{ rc.date.strftime('%d %b') }}</td>
+            <td>{{ rc.recipient_name }}</td>
+            <td>{{ rc.home_name }}</td>
+            <td><span class="kq-badge kq-{{ rc.key_question | lower | replace(' ', '-') }}">{{ rc.key_question }}</span></td>
+            <td style="max-width:260px;color:#555;">{{ rc.statement_snippet }}</td>
+            <td style="white-space:nowrap;color:#888;font-size:12px;">
+              {% if rc.completed_at %}{{ rc.completed_at.strftime('%H:%M') }}{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding: 20px; color: #888; font-size: 14px;">No completions yet.</div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

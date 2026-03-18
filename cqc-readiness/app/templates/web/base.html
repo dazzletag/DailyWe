@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CQC Readiness{% endblock %} — Bristol Care Homes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #333333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: #1B4F8A; }
+    a:hover { text-decoration: underline; }
+    /* Header */
+    .site-header {
+      background-color: #1B4F8A;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-header .brand {
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+    .site-header .brand span {
+      color: #a8c4e8;
+      font-weight: 400;
+    }
+    .site-header .sub-brand {
+      color: #a8c4e8;
+      font-size: 13px;
+    }
+    /* Main */
+    .main-content {
+      flex: 1;
+      padding: 32px 16px;
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    /* Card */
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 480px) {
+      .card { padding: 20px 16px; }
+    }
+    /* Footer */
+    .site-footer {
+      background-color: #1B4F8A;
+      padding: 16px 24px;
+      text-align: center;
+    }
+    .site-footer p {
+      color: #a8c4e8;
+      font-size: 12px;
+    }
+    /* Utilities */
+    .text-center { text-align: center; }
+    .text-muted { color: #888888; }
+    .mt-4 { margin-top: 16px; }
+    .mt-8 { margin-top: 32px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1B4F8A; margin-bottom: 8px; }
+    h2 { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+    p { font-size: 15px; line-height: 1.65; color: #555555; }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-safe        { background-color: #1565C0; }
+    .badge-effective   { background-color: #2E7D32; }
+    .badge-caring      { background-color: #F9A825; color: #333; }
+    .badge-responsive  { background-color: #E65100; }
+    .badge-well-led    { background-color: #B71C1C; }
+    {% block extra_styles %}{% endblock %}
+  </style>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="/">Bristol Care Homes <span>| CQC Readiness</span></a>
+    <span class="sub-brand">Daily Readiness Check</span>
+  </header>
+
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; Bristol Care Homes — CQC Readiness System</p>
+  </footer>
+
+</body>
+</html>

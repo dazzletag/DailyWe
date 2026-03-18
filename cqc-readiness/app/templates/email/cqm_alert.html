@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Low Confidence Alert</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f9;font-family:Arial,Helvetica,sans-serif;">
+
+<table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background-color:#f4f6f9;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+
+      <table role="presentation" cellpadding="0" cellspacing="0" width="600"
+             style="max-width:600px;width:100%;background-color:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.10);">
+
+        <!-- ── ALERT HEADER ───────────────────────────────────────────────── -->
+        <tr>
+          <td style="background-color:#B71C1C;padding:28px 32px;">
+            <p style="margin:0 0 4px 0;color:#ef9a9a;font-size:12px;letter-spacing:1px;text-transform:uppercase;">Bristol Care Homes — CQC Readiness</p>
+            <h1 style="margin:0 0 6px 0;color:#ffffff;font-size:22px;font-weight:700;line-height:1.3;">
+              &#9888;&#65039; Low Confidence Alert
+            </h1>
+            <p style="margin:0;color:#ffcdd2;font-size:14px;">{{ today_date }}</p>
+          </td>
+        </tr>
+
+        <!-- ── INTRO ──────────────────────────────────────────────────────── -->
+        <tr>
+          <td style="padding:24px 32px 16px 32px;">
+            <p style="margin:0;font-size:14px;color:#333333;line-height:1.7;">
+              A team member has indicated <strong>low confidence</strong> in today's
+              CQC readiness check. Please review the details below and consider
+              whether direct support or follow-up is needed.
+            </p>
+          </td>
+        </tr>
+
+        <!-- ── SUMMARY TABLE ──────────────────────────────────────────────── -->
+        <tr>
+          <td style="padding:0 32px 20px 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+                   style="border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;border-collapse:collapse;">
+              <tr>
+                <td colspan="2" style="background-color:#f8f9fc;padding:12px 16px;border-bottom:1px solid #e0e0e0;">
+                  <h2 style="margin:0;font-size:14px;font-weight:700;color:#B71C1C;">
+                    Respondent Details
+                  </h2>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;font-weight:700;color:#555555;width:40%;border-bottom:1px solid #f0f0f0;">Name</td>
+                <td style="padding:10px 16px;font-size:13px;color:#333333;border-bottom:1px solid #f0f0f0;">{{ recipient_name }}</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;font-weight:700;color:#555555;border-bottom:1px solid #f0f0f0;background-color:#fafafa;">Email</td>
+                <td style="padding:10px 16px;font-size:13px;color:#333333;border-bottom:1px solid #f0f0f0;background-color:#fafafa;">
+                  <a href="mailto:{{ recipient_email }}" style="color:#1B4F8A;">{{ recipient_email }}</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;font-weight:700;color:#555555;border-bottom:1px solid #f0f0f0;">Home</td>
+                <td style="padding:10px 16px;font-size:13px;color:#333333;border-bottom:1px solid #f0f0f0;">{{ home_name }}</td>
+              </tr>
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;font-weight:700;color:#555555;background-color:#fafafa;">Key Question</td>
+                <td style="padding:10px 16px;font-size:13px;color:#333333;background-color:#fafafa;">{{ statement.key_question }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- ── WE STATEMENT ───────────────────────────────────────────────── -->
+        <tr>
+          <td style="padding:0 32px 20px 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+                   style="background-color:#FFF3E0;border-left:5px solid #E65100;border-radius:0 6px 6px 0;">
+              <tr>
+                <td style="padding:16px 20px;">
+                  <p style="margin:0 0 6px 0;font-size:11px;font-weight:700;color:#E65100;text-transform:uppercase;letter-spacing:1px;">We Statement</p>
+                  <p style="margin:0;font-size:14px;color:#1a1a1a;line-height:1.6;font-style:italic;">
+                    "{{ statement.statement_text }}"
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- ── RESPONSE BREAKDOWN ─────────────────────────────────────────── -->
+        <tr>
+          <td style="padding:0 32px 20px 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%"
+                   style="border:1px solid #e0e0e0;border-radius:6px;overflow:hidden;border-collapse:collapse;">
+              <tr>
+                <td colspan="3" style="background-color:#f8f9fc;padding:12px 16px;border-bottom:1px solid #e0e0e0;">
+                  <h2 style="margin:0;font-size:14px;font-weight:700;color:#B71C1C;">
+                    Response Summary
+                  </h2>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 16px;font-size:12px;font-weight:700;color:#888888;text-transform:uppercase;background-color:#fafafa;border-bottom:1px solid #eeeeee;">#</td>
+                <td style="padding:8px 16px;font-size:12px;font-weight:700;color:#888888;text-transform:uppercase;background-color:#fafafa;border-bottom:1px solid #eeeeee;">Question</td>
+                <td style="padding:8px 16px;font-size:12px;font-weight:700;color:#888888;text-transform:uppercase;background-color:#fafafa;border-bottom:1px solid #eeeeee;">Answer</td>
+              </tr>
+              {% set question_texts = {
+                1: "I understand what this statement means and what evidence is needed",
+                2: "I feel confident that our current practice meets this standard",
+                3: "I can confidently evidence this to a CQC inspector today"
+              } %}
+              {% set answer_labels = {
+                'confident': 'Confident',
+                'partly': 'Partly Confident',
+                'not_confident': 'Not Confident'
+              } %}
+              {% set answer_colours = {
+                'confident': '#2E7D32',
+                'partly': '#F57C00',
+                'not_confident': '#C62828'
+              } %}
+              {% for response in responses | sort(attribute='question_num') %}
+              <tr>
+                <td style="padding:10px 16px;font-size:13px;color:#555555;border-bottom:1px solid #f0f0f0;{% if loop.index % 2 == 0 %}background-color:#fafafa;{% endif %}">
+                  Q{{ response.question_num }}
+                </td>
+                <td style="padding:10px 16px;font-size:13px;color:#333333;border-bottom:1px solid #f0f0f0;{% if loop.index % 2 == 0 %}background-color:#fafafa;{% endif %}">
+                  {{ question_texts[response.question_num] }}
+                </td>
+                <td style="padding:10px 16px;border-bottom:1px solid #f0f0f0;{% if loop.index % 2 == 0 %}background-color:#fafafa;{% endif %}">
+                  <span style="display:inline-block;background-color:{{ answer_colours.get(response.answer, '#666') }};color:#ffffff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:12px;">
+                    {{ answer_labels.get(response.answer, response.answer) }}
+                  </span>
+                </td>
+              </tr>
+              {% endfor %}
+            </table>
+          </td>
+        </tr>
+
+        <!-- ── VIEW DASHBOARD CTA ─────────────────────────────────────────── -->
+        <tr>
+          <td style="padding:0 32px 28px 32px;" align="center">
+            <a href="{{ base_url }}/admin/alerts"
+               style="display:inline-block;background-color:#1B4F8A;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;padding:13px 28px;border-radius:5px;">
+              View Dashboard &amp; Alerts
+            </a>
+          </td>
+        </tr>
+
+        <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
+        <tr>
+          <td style="background-color:#f4f6f9;border-top:1px solid #e0e0e0;padding:20px 32px;">
+            <p style="margin:0;font-size:12px;color:#888888;line-height:1.6;">
+              This alert was generated automatically by the Bristol Care Homes
+              CQC Readiness System. A support pack has been sent to the respondent.
+            </p>
+            <p style="margin:8px 0 0 0;font-size:11px;color:#aaaaaa;">
+              &copy; Bristol Care Homes | CQC Readiness System
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

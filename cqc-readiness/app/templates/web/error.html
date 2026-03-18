@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ error_title | default('Error') }}{% endblock %}
+
+{% block extra_styles %}
+.error-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #FFEBEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  font-size: 28px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+
+  <div class="error-icon">&#9888;&#65039;</div>
+
+  <h1 style="color: #B71C1C;">{{ error_title | default('Something went wrong') }}</h1>
+
+  <p style="margin-top: 10px; font-size: 15px; color: #555;">
+    {{ error_message | default('An unexpected error occurred. Please try again or contact support.') }}
+  </p>
+
+  <p style="margin-top: 24px; font-size: 13px; color: #aaa;">
+    If this problem persists, please contact your Care Quality Manager.
+  </p>
+
+</div>
+{% endblock %}

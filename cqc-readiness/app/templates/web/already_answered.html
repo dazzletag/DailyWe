@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Already Answered{% endblock %}
+
+{% block extra_styles %}
+.info-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #E3F2FD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  font-size: 28px;
+}
+{% endblock %}
+
+{% block content %}
+<div class="card text-center">
+
+  <div class="info-icon">&#8505;&#65039;</div>
+
+  <h1 style="color: #1565C0;">Already Answered</h1>
+
+  <p style="margin-top: 10px;">
+    Hi <strong>{{ recipient_name }}</strong> — you've already answered
+    <strong>Question {{ question_num }}</strong> in today's readiness check.
+  </p>
+
+  <div style="background: #f8f9fc; border-radius: 6px; padding: 14px 18px; margin: 20px 0; text-align: left;">
+    <p style="font-size: 13px; color: #777; margin-bottom: 4px;">Question {{ question_num }}</p>
+    <p style="font-size: 14px; color: #333; margin-bottom: 8px;"><em>{{ question_text }}</em></p>
+    <p style="font-size: 13px; margin: 0;">
+      Your recorded answer:
+      <strong style="color: #1B4F8A;">{{ previous_answer }}</strong>
+    </p>
+  </div>
+
+  <p style="font-size: 14px; color: #777;">
+    Each question can only be answered once per day.
+    If you need to change your answer, please contact your
+    <strong>Care Quality Manager</strong>.
+  </p>
+
+</div>
+{% endblock %}
